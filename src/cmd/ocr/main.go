@@ -11,6 +11,7 @@ import (
 
 	"expense-tracker/src/pkg/config"
 	"expense-tracker/src/pkg/ocr"
+	"expense-tracker/src/pkg/util"
 )
 
 /*
@@ -32,6 +33,8 @@ func main() {
 
 	// Parse and initialize config.
 	flag.Parse()
+	util.RequiredFlag(imagePath, "image")
+	util.EnsureFlags()
 	config.InitializeConfig(*configPath)
 
 	// Log basic startup information.

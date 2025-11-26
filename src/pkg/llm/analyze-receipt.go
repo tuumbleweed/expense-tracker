@@ -1,7 +1,7 @@
 /*
 Parse receipt OCR output and classify each line item into categories using OpenAI.
 */
-package ai
+package llm
 
 import (
 	"fmt"
