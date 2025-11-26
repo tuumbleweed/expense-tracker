@@ -291,6 +291,14 @@ func runOcrOnImage(imagePath string) (ocrText string, e *xerr.Error) {
 	if err != nil {
 		return "", xerr.NewError(err, "unable to client.SetLanguage(\"spa\")", imagePath)
 	}
+
+	// Match CLI: `--psm 6` (single uniform block of text).
+	err = client.SetPageSegMode(gosseract.PSM_SINGLE_BLOCK)
+	if err != nil {
+		e = xerr.NewError(err, "unable to client.SetPageSegMode(PSM_SINGLE_BLOCK)", imagePath)
+		return
+	}
+
 	err = client.SetImage(imagePath)
 	if err != nil {
 		return "", xerr.NewError(err, "unable to client.SetImage(imagePath)", imagePath)
