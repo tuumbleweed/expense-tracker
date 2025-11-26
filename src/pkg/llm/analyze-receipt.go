@@ -80,18 +80,17 @@ to the caller via ReceiptAnalysis.Categories.
 */
 func buildDefaultReceiptCategories() map[string]string {
 	return map[string]string{
-		"groceries_dairy":      "Milk, yogurt, cheese, butter and other dairy products.",
-		"groceries_bakery":     "Bread, baked goods, pastries, tortillas and similar items.",
-		"snacks_sweets":        "Snacks, cookies, candy, chocolate, desserts and similar.",
-		"drinks_soft":          "Soft drinks, bottled water, juices and non-alcoholic beverages.",
-		"drinks_energy":        "Energy drinks such as Vive 100, Red Bull and similar.",
-		"groceries_other_food": "Other food items not covered by more specific grocery categories.",
-		"household_cleaning":   "Cleaning products, detergents, paper goods and similar.",
-		"personal_care":        "Toiletries, cosmetics, hygiene and personal care products.",
-		"prepared_food":        "Prepared meals, take-out food or ready-to-eat items.",
-		"health_medicine":      "Pharmacy products, medicines and health-related items.",
-		"transportation":       "Transport-related expenses such as fuel, taxi or public transport.",
-		"other":                "Anything that does not clearly fit any of the categories above.",
+		"dairy":              "Milk, yogurt, cheese, butter and other dairy products.",
+		"bakery":             "Bread, baked goods, pastries, tortillas and similar items.",
+		"snacks_sweets":      "Snacks, cookies, candy, chocolate, desserts and similar.",
+		"drinks_soft":        "Soft drinks, bottled water, juices and non-alcoholic beverages.",
+		"other_food":         "Other food items not covered by more specific grocery categories.",
+		"household_cleaning": "Cleaning products, detergents, paper goods and similar.",
+		"personal_care":      "Toiletries, cosmetics, hygiene and personal care products.",
+		"prepared_food":      "Prepared meals, take-out food or ready-to-eat items.",
+		"medicine":           "Pharmacy products, medicines and health-related items.",
+		"body_building":      "Protein, creatine etc.",
+		"other":              "Anything that does not clearly fit any of the categories above.",
 	}
 }
 
