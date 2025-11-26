@@ -57,7 +57,7 @@ type ReceiptTotals struct {
 ReceiptAnalysis is the full result of the AI-based receipt parsing.
 
 Fields:
-  - AIRunMetadata: metadata returned by the OpenAI wrapper.
+  - LLMRunMetadata: metadata returned by the OpenAI wrapper.
   - Items: list of parsed receipt items.
   - Categories: map of category keys to human-readable descriptions that were
     used for classification.
@@ -66,9 +66,9 @@ Fields:
     (within 1 COP); otherwise, a short English explanation of the difference.
 */
 type ReceiptAnalysis struct {
-	AIRunMetadata *openai.AIRunMetadata `json:"ai_run_metadata,omitempty"`
-	Items         []ReceiptItem         `json:"items"`
-	Totals        ReceiptTotals         `json:"totals"`
+	LLMRunMetadata *openai.LLMRunMetadata `json:"llm_run_metadata,omitempty"`
+	Items          []ReceiptItem          `json:"items"`
+	Totals         ReceiptTotals          `json:"totals"`
 }
 
 /*
@@ -120,7 +120,7 @@ Behavior:
   - Totals
   - TotalCheckMessage
   - Categories (the effective category map used for the run)
-  - AIRunMetadata from the OpenAI wrapper.
+  - LLMRunMetadata from the OpenAI wrapper.
 */
 func GenerateReceiptAnalysis(userMessage string, categories map[string]string) (receiptAnalysis ReceiptAnalysis, e *xerr.Error) {
 	model := "gpt-5-nano"
@@ -263,9 +263,9 @@ Perform a best-effort reconstruction of items and totals from the noisy OCR text
 		},
 	}
 
-	var aiRunMetadata *openai.AIRunMetadata
+	var llmRunMetadata *openai.LLMRunMetadata
 
-	receiptAnalysis, aiRunMetadata, e = openai.UseChatGPTResponsesAPI[ReceiptAnalysis](
+	receiptAnalysis, llmRunMetadata, e = openai.UseChatGPTResponsesAPI[ReceiptAnalysis](
 		model,
 		reasoningEffort,
 		instructions,
@@ -281,7 +281,7 @@ Perform a best-effort reconstruction of items and totals from the noisy OCR text
 	}
 
 	// Attach metadata and effective categories used for this run.
-	receiptAnalysis.AIRunMetadata = aiRunMetadata
+	receiptAnalysis.LLMRunMetadata = llmRunMetadata
 
 	tl.Log(
 		tl.Notice1, palette.GreenBold, "%s with %s model %s, reasoning effort is %s",

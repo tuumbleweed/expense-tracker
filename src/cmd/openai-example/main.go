@@ -44,11 +44,11 @@ func main() {
 	schemaProperties := map[string]any{
 		"response": map[string]any{"type": "string"},
 	}
-	openAIExampleResponse, aiRunMetadata, e := openai.UseChatGPTResponsesAPI[OpenAIExampleResponse](
+	openAIExampleResponse, llmRunMetadata, e := openai.UseChatGPTResponsesAPI[OpenAIExampleResponse](
 		model, reasoningEffort, instructions, developerMessage, userMessage, schemaProperties,
 		maxOutputTokens, tools, toolChoice,
 	)
 	e.QuitIf("error")
 	tl.LogJSON(tl.Notice, palette.Cyan, "Open AI Response", openAIExampleResponse)
-	tl.LogJSON(tl.Notice, palette.Cyan, "AI Run Metadata", aiRunMetadata)
+	tl.LogJSON(tl.Notice, palette.Cyan, "AI Run Metadata", llmRunMetadata)
 }

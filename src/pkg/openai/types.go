@@ -103,7 +103,7 @@ type Reasoning struct {
 
 // ModelRunMetadata captures how an AI response was generated.
 // Keep it alongside your result payload for auditing and cost tracking.
-type AIRunMetadata struct {
+type LLMRunMetadata struct {
 	// Core
 	ResponseID      string `json:"response_id"`       // can make url out of it to see it at https://platform.openai.com/logs/<ResponseID>
 	ResponseLogsUrl string `json:"response_logs_url"` // https://platform.openai.com/logs/<ResponseID>

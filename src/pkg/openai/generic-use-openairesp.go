@@ -19,7 +19,7 @@ func UseChatGPTResponsesAPI[T any](
 	model string, reasoningEffort Effort,
 	instructions, developerMessage, userMessage string, schemaProperties map[string]any,
 	maxOutputTokens int, tools []any, toolChoice any,
-) (openAIResponse T, aiRunMetadata *AIRunMetadata, e *xerr.Error) {
+) (openAIResponse T, llmRunMetadata *LLMRunMetadata, e *xerr.Error) {
 
 	// JSON Schema for Responses API structured outputs
 	schema := StrictObj(schemaProperties)

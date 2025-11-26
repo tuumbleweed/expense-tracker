@@ -12,12 +12,12 @@ import (
 /*
 Extract AI run metadata to include in the report to the admin
 */
-func ExtractAIRunMetadata(resp responseObject, startTime time.Time) (meta AIRunMetadata) {
+func ExtractLLMRunMetadata(resp responseObject, startTime time.Time) (meta LLMRunMetadata) {
 	// Intent log — quote values that might be empty as requested.
 	tl.Log(
 		tl.Info, palette.Blue,
 		"%s for response_id='%s' status='%s'",
-		"Building AIRunMetadata", resp.ID, resp.Status,
+		"Building LLMRunMetadata", resp.ID, resp.Status,
 	)
 
 	// Core identifiers & status
@@ -61,7 +61,7 @@ func ExtractAIRunMetadata(resp responseObject, startTime time.Time) (meta AIRunM
 	tl.Log(
 		tl.Info1, palette.Green,
 		"%s for response_id='%s' status='%s'",
-		"Built   AIRunMetadata", meta.ResponseID, meta.Status,
+		"Built   LLMRunMetadata", meta.ResponseID, meta.Status,
 	)
 	return meta
 }

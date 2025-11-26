@@ -28,7 +28,7 @@ NOTE: We purposely DO NOT print the full response text here to avoid duplicate p
 
 	The caller (entrypoint) should print responseText.
 */
-func SendPromptReturnResponse(inputParameters InputParameters) (responseText string, meta AIRunMetadata, e *xerr.Error) {
+func SendPromptReturnResponse(inputParameters InputParameters) (responseText string, meta LLMRunMetadata, e *xerr.Error) {
 	tl.Log(tl.Info, palette.Blue, "%s %s to %s with previous_response_id='%s'", "Sending", "prompt", "OpenAI Responses API", inputParameters.PreviousResponseID)
 	startTime := time.Now()
 
@@ -51,7 +51,7 @@ func SendPromptReturnResponse(inputParameters InputParameters) (responseText str
 
 	initial, createErr := createResponse(inputParameters.OpenAIAPIKey, requestPayload)
 	if createErr != nil {
-		return "", AIRunMetadata{}, createErr
+		return "", LLMRunMetadata{}, createErr
 	}
 
 	var finalResp responseObject
@@ -64,13 +64,13 @@ func SendPromptReturnResponse(inputParameters InputParameters) (responseText str
 		tl.Log(tl.Info, palette.Cyan, "%s current status is '%s' id - '%s' (polling every 2s)...", "Waiting for completion,", initial.Status, initial.ID)
 		resp, waitErr := waitForResponseCompletion(inputParameters.OpenAIAPIKey, initial.ID, 2*time.Second, 5*time.Minute)
 		if waitErr != nil {
-			return "", AIRunMetadata{ResponseID: initial.ID}, waitErr
+			return "", LLMRunMetadata{ResponseID: initial.ID}, waitErr
 		}
 		finalResp = resp
 	}
 
 	text := extractOutputText(&finalResp)
-	meta = ExtractAIRunMetadata(finalResp, startTime)
+	meta = ExtractLLMRunMetadata(finalResp, startTime)
 
 	// Token usage logging (if available)
 	if finalResp.Usage != nil {
