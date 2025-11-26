@@ -3,8 +3,11 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
+	"fmt"
 	"os"
+	"path/filepath"
 
 	tl "github.com/tuumbleweed/tintlog/logger"
 	"github.com/tuumbleweed/tintlog/palette"
@@ -30,11 +33,12 @@ func main() {
 	configPath := flag.String("config", "./cfg/config.json", "Path to your configuration file.")
 	// Program-specific flags.
 	ocrTextPath := flag.String("ocr-text", "", "Path to the OCR text file to analyze.")
-	// Parse flags and initialize config.
+	// Parse flags.
 	flag.Parse()
-	// Mark required flags.
+	// Mark required flags and ensure they are present.
 	util.RequiredFlag(ocrTextPath, "ocr-text")
 	util.EnsureFlags()
+	// Initialize configuration.
 	config.InitializeConfig(*configPath)
 
 	tl.Log(
@@ -48,8 +52,8 @@ func main() {
 	ocrText := string(ocrBytes)
 
 	tl.Log(
-		tl.Info1, palette.Cyan, "Loaded OCR text from '%s' (length: %s)",
-		*ocrTextPath, len(ocrText),
+		tl.Info1, palette.Cyan, "Loaded OCR text from '%s' (length: '%s')",
+		*ocrTextPath, fmt.Sprintf("%d", len(ocrText)),
 	)
 
 	// For now, pass nil to use the default category map inside the LLM layer.
@@ -58,10 +62,35 @@ func main() {
 		analysisErr.QuitIf(xerr.ErrorTypeError)
 	}
 
+	// If totals do not match, log a warning and stop the program.
+	if receiptAnalysis.Totals.TotalCheckMessage != "" {
+		tl.Log(
+			tl.Warning, palette.PurpleBold, "Receipt total does not match sum of items: '%s'",
+			receiptAnalysis.Totals.TotalCheckMessage,
+		)
+		tl.Log(tl.Warning1, palette.PurpleBold, "%s", "Try taking a photo again")
+		os.Exit(0)
+	}
+
+	// Totals are OK; proceed to save the analysis JSON next to the OCR text file.
+	runDirPath := filepath.Dir(*ocrTextPath)
+	analysisPath := filepath.Join(runDirPath, "receipt-analysis.json")
+
+	jsonBytes, marshalErr := json.MarshalIndent(receiptAnalysis, "", "  ")
+	xerr.QuitIfError(marshalErr, "marshal receipt analysis to JSON")
+
+	writeErr := os.WriteFile(analysisPath, jsonBytes, 0o644)
+	xerr.QuitIfError(writeErr, "write receipt-analysis.json file")
+
 	tl.Log(
 		tl.Notice1, palette.GreenBold, "%s",
-		"Receipt analysis generated successfully",
+		"Receipt analysis generated and saved successfully",
 	)
+	tl.Log(
+		tl.Info1, palette.Green, "Saved receipt analysis to '%s'",
+		analysisPath,
+	)
+
 	// Log the structured analysis as JSON for inspection.
 	tl.LogJSON(tl.Info, palette.Cyan, "ReceiptAnalysis", receiptAnalysis)
 }
