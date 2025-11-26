@@ -57,12 +57,12 @@ runImageProcessingFlow orchestrates the overall image processing pipeline.
 
 It performs the following steps:
   1. Validates the input image path.
-  2. Ensures the output directory exists.
-  3. Generates a timestamp-based base name for output files.
-  4. Copies the original image into the output directory with a timestamped name.
-  5. Creates a processed version of the image (grayscale, resized, sharpened, contrast-adjusted).
-  6. Runs OCR (in Spanish) on the processed image using gosseract.
-  7. Saves the OCR text into a .txt file next to the images.
+  2. Ensures the root output directory exists.
+  3. Creates a per-run directory under the root, named by timestamp.
+  4. Copies the original image into that run directory as orig.<ext>.
+  5. Creates a processed version of the image in that run directory as clean.png.
+  6. Runs OCR (in Spanish) on clean.png using gosseract.
+  7. Saves the OCR text into ocr.txt in the same run directory.
 
 If any step fails, it returns a *xerr.Error describing the problem.
 */
@@ -84,31 +84,41 @@ func runImageProcessingFlow(imagePath string, outputDirPath string) (e *xerr.Err
 	}
 
 	tl.Log(
-		tl.Notice, palette.BlueBold, "%s image processing for '%s' into '%s'",
+		tl.Notice, palette.BlueBold, "%s image processing for '%s' into root '%s'",
 		"Starting", imagePath, normalizedOutputDirPath,
 	)
 
-	// Ensure output directory exists.
+	// Ensure root output directory exists (e.g. ./out).
 	e = ensureOutputDirectory(normalizedOutputDirPath)
 	if e != nil {
 		return e
 	}
 
-	// Generate a timestamp-based base name with filename-safe characters only.
+	// Generate a timestamp-based directory name with filename-safe characters only.
+	// Example: 2025-11-26_16-35-31
 	timestamp := time.Now().Format("2006-01-02_15-04-05")
-	baseName := fmt.Sprintf("receipt_%s", timestamp)
 
-	// Build all output paths.
+	// Per-run directory inside the root, e.g. ./out/2025-11-26_16-35-31
+	runDirPath := filepath.Join(normalizedOutputDirPath, timestamp)
+
+	// Ensure per-run directory exists.
+	e = ensureOutputDirectory(runDirPath)
+	if e != nil {
+		return e
+	}
+
+	// Determine original extension (keep the dot).
 	originalExt := strings.ToLower(filepath.Ext(imagePath))
 	if originalExt == "" {
 		originalExt = ".jpg"
 	}
 
-	originalOutPath := filepath.Join(normalizedOutputDirPath, baseName+"_orig"+originalExt)
-	processedOutPath := filepath.Join(normalizedOutputDirPath, baseName+"_clean.png")
-	ocrOutPath := filepath.Join(normalizedOutputDirPath, baseName+"_ocr.txt")
+	// Build all output paths inside the per-run directory.
+	originalOutPath := filepath.Join(runDirPath, "orig"+originalExt)
+	processedOutPath := filepath.Join(runDirPath, "clean.png")
+	ocrOutPath := filepath.Join(runDirPath, "ocr.txt")
 
-	// Copy original image to the output directory.
+	// Copy original image to the run directory.
 	e = copyOriginalImage(imagePath, originalOutPath)
 	if e != nil {
 		return e
@@ -134,12 +144,13 @@ func runImageProcessingFlow(imagePath string, outputDirPath string) (e *xerr.Err
 	}
 
 	tl.Log(
-		tl.Info1, palette.Green, "Finished processing image '%s'. Original: '%s', processed: '%s', OCR text: '%s'",
-		imagePath, originalOutPath, processedOutPath, ocrOutPath,
+		tl.Info1, palette.Green, "Finished processing image '%s'. Run dir: '%s', original: '%s', processed: '%s', OCR text: '%s'",
+		imagePath, runDirPath, originalOutPath, processedOutPath, ocrOutPath,
 	)
 
 	return e
 }
+
 
 /*
 ensureOutputDirectory creates the target directory (and parents) if needed.
