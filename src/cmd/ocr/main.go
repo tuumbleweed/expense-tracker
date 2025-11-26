@@ -9,8 +9,8 @@ import (
 	"github.com/tuumbleweed/tintlog/palette"
 	"github.com/tuumbleweed/xerr"
 
-	"this-project/src/pkg/config"
-	"this-project/src/pkg/ocr"
+	"expense-tracker/src/pkg/config"
+	"expense-tracker/src/pkg/ocr"
 )
 
 /*

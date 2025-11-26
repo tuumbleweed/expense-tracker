@@ -11,9 +11,9 @@ import (
 	"github.com/tuumbleweed/tintlog/palette"
 	"github.com/tuumbleweed/xerr"
 
-	"this-project/src/pkg/config"
-	"this-project/src/pkg/email"
-	"this-project/src/pkg/util"
+	"expense-tracker/src/pkg/config"
+	"expense-tracker/src/pkg/email"
+	"expense-tracker/src/pkg/util"
 )
 
 /*

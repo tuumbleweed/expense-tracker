@@ -8,7 +8,7 @@ import (
 	"github.com/tuumbleweed/tintlog/palette"
 	"github.com/tuumbleweed/xerr"
 
-	"this-project/src/pkg/util"
+	"expense-tracker/src/pkg/util"
 )
 
 /*

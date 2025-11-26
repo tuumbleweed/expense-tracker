@@ -8,8 +8,8 @@ import (
 	tl "github.com/tuumbleweed/tintlog/logger"
 	"github.com/tuumbleweed/tintlog/palette"
 
-	"this-project/src/pkg/config"
-	"this-project/src/pkg/openai"
+	"expense-tracker/src/pkg/config"
+	"expense-tracker/src/pkg/openai"
 )
 
 type OpenAIExampleResponse struct {

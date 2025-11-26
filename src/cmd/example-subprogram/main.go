@@ -9,7 +9,7 @@ import (
 	"github.com/tuumbleweed/tintlog/palette"
 	"github.com/tuumbleweed/xerr"
 
-	"this-project/src/pkg/config"
+	"expense-tracker/src/pkg/config"
 )
 
 func example(subprogram string, flags []string) {

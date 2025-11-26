@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"this-project/src/pkg/util"
+	"expense-tracker/src/pkg/util"
 	"time"
 
 	tl "github.com/tuumbleweed/tintlog/logger"

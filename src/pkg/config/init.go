@@ -21,7 +21,7 @@ type Config struct {
 
 func GetDefaultConfig() Config {
 	callerProgramName := GetCallerProgramNamePanicWrapper(5)
-	callerProgramName = strings.TrimPrefix(callerProgramName, "this-project/")
+	callerProgramName = strings.TrimPrefix(callerProgramName, "expense-tracker/")
 	callerProgramName = strings.TrimPrefix(callerProgramName, "project-layout/")
 	return Config{CallerProgramName: callerProgramName}
 }

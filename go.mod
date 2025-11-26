@@ -1,4 +1,4 @@
-module this-project
+module expense-tracker
 
 go 1.25.3
 
