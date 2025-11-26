@@ -20,6 +20,8 @@ env/*
 tmp/*
 # directory for log files
 log/*
+# directory for output files
+out/*
 
 # vi files
 *~
