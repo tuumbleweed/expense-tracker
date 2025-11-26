@@ -22,7 +22,7 @@ Fields:
   - LineIndex: zero-based index of the line in the OCR text that primarily
     corresponds to this item. Use -1 if the line index is unclear.
   - RawLine: raw OCR text for this item (or the main line used).
-  - ProductNameSpanish: cleaned product name in Spanish.
+  - OriginalProductName: cleaned product name as it is in receipt.
   - ProductNameEnglish: short English translation of the product name.
   - Quantity: quantity of the item (1.0 if not explicitly specified).
   - UnitPrice: unit price in COP, if you can infer it (0 if unknown).
@@ -30,14 +30,14 @@ Fields:
   - CategoryKey: one of the allowed category keys (or "other" if nothing fits).
 */
 type ReceiptItem struct {
-	LineIndex          int     `json:"line_index"`
-	RawLine            string  `json:"raw_line"`
-	ProductNameSpanish string  `json:"product_name_spanish"`
-	ProductNameEnglish string  `json:"product_name_english"`
-	Quantity           float64 `json:"quantity"`
-	UnitPrice          float64 `json:"unit_price"`
-	LineTotal          float64 `json:"line_total"`
-	CategoryKey        string  `json:"category_key"`
+	LineIndex           int     `json:"line_index"`
+	RawLine             string  `json:"raw_line"`
+	OriginalProductName string  `json:"original_product_name"`
+	ProductNameEnglish  string  `json:"product_name_english"`
+	Quantity            float64 `json:"quantity"`
+	UnitPrice           float64 `json:"unit_price"`
+	LineTotal           float64 `json:"line_total"`
+	CategoryKey         string  `json:"category_key"`
 }
 
 /*
@@ -99,7 +99,7 @@ GenerateReceiptAnalysis takes OCR'd receipt text and an optional category map
 and produces a structured ReceiptAnalysis using the OpenAI Responses API.
 
 Parameters:
-  - userMessage: raw OCR text from the receipt (possibly noisy, in Spanish).
+  - userMessage: raw OCR text from the receipt (possibly noisy, often in Spanish).
   - categories: optional category map (key -> description). If this map is
     nil or empty, a default set of categories is used.
 
@@ -156,7 +156,7 @@ Your task:
 - Read the OCR text from the user.
 - Identify each purchased product line.
 - For each item, extract:
-  - product_name_spanish: cleaned product name in Spanish.
+  - original_product_name: cleaned product name exactly as in OCR text, without the price.
   - product_name_english: short English translation of the product name.
   - quantity: numeric quantity (use 1.0 if not explicitly given but implied).
   - unit_price: unit price in COP if you can infer it, otherwise 0.
@@ -203,9 +203,9 @@ Perform a best-effort reconstruction of items and totals from the noisy OCR text
 						"type":        "string",
 						"description": "Raw OCR text line(s) used to derive this item.",
 					},
-					"product_name_spanish": map[string]any{
+					"original_product_name": map[string]any{
 						"type":        "string",
-						"description": "Cleaned product name in Spanish.",
+						"description": "Cleaned product name as it is in the OCR text, without the price.",
 					},
 					"product_name_english": map[string]any{
 						"type":        "string",
@@ -231,7 +231,7 @@ Perform a best-effort reconstruction of items and totals from the noisy OCR text
 				"required": []string{
 					"line_index",
 					"raw_line",
-					"product_name_spanish",
+					"original_product_name",
 					"product_name_english",
 					"quantity",
 					"unit_price",
