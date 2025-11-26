@@ -310,7 +310,7 @@ func runOcrOnImage(imagePath string) (ocrText string, e *xerr.Error) {
 	}
 
 	tl.Log(
-		tl.Info1, palette.Cyan, "OCR completed for '%s' (text length: %s)",
+		tl.Info1, palette.Green, "OCR completed for '%s' (text length: %s)",
 		imagePath, fmt.Sprintf("%d", len(ocrText)),
 	)
 
