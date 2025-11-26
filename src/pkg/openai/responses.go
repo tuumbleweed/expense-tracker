@@ -1,3 +1,11 @@
+/*
+This file contains a tiny, dependency-free REST client for the OpenAI Responses API.
+
+Key pieces:
+- POST /v1/responses (createResponse): synchronous or may return an in-progress response
+- GET  /v1/responses/{id} (getResponseByID): fetch status/output/usage
+- Optional file upload helper (UploadUserFile) via /v1/files
+*/
 package openai
 
 import (
@@ -19,15 +27,6 @@ const (
 	GetResponseTimeout    = 30 * time.Second  // metadata fetch should be fast
 	FileUploadTimeout     = 60 * time.Second
 )
-
-/*
-This file contains a tiny, dependency-free REST client for the OpenAI Responses API.
-
-Key pieces:
-- POST /v1/responses (createResponse): synchronous or may return an in-progress response
-- GET  /v1/responses/{id} (getResponseByID): fetch status/output/usage
-- Optional file upload helper (UploadUserFile) via /v1/files
-*/
 
 const OpenAIAPIURL = "https://api.openai.com/v1"
 

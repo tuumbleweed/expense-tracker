@@ -4,8 +4,8 @@ type TextVerbosity string
 
 const (
 	TextVerbosityLow    TextVerbosity = "low"
-	textVerbosityMedium TextVerbosity = "medium" // (default behavior if omitted)
-	textVerbosityHigh   TextVerbosity = "high"
+	TextVerbosityMedium TextVerbosity = "medium" // (default behavior if omitted)
+	TextVerbosityHigh   TextVerbosity = "high"
 )
 
 type InputRole string
