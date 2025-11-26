@@ -192,54 +192,53 @@ Perform a best-effort reconstruction of items and totals from the noisy OCR text
 	// This must match the ReceiptAnalysis struct layout.
 	schemaProperties := map[string]any{
 		"items": map[string]any{
-			"type":        "array",
-			"description": "List of line items parsed from the receipt.",
-			"items": map[string]any{
-				"type": "object",
-				"properties": map[string]any{
-					"line_index": map[string]any{
-						"type":        "integer",
-						"description": "Zero-based index of the main OCR line for this item, or -1 if unknown.",
-					},
-					"raw_line": map[string]any{
-						"type":        "string",
-						"description": "Raw OCR text line(s) used to derive this item.",
-					},
-					"product_name_spanish": map[string]any{
-						"type":        "string",
-						"description": "Cleaned product name in Spanish.",
-					},
-					"product_name_english": map[string]any{
-						"type":        "string",
-						"description": "Short English translation of the product name.",
-					},
-					"quantity": map[string]any{
-						"type":        "number",
-						"description": "Quantity of the item (1.0 if not explicitly given).",
-					},
-					"unit_price": map[string]any{
-						"type":        "number",
-						"description": "Unit price in COP, or 0 if unknown.",
-					},
-					"line_total": map[string]any{
-						"type":        "number",
-						"description": "Total amount for this item in COP.",
-					},
-					"category_key": map[string]any{
-						"type":        "string",
-						"description": "One of the allowed category keys or 'other'.",
-					},
+			"type": "object",
+			"properties": map[string]any{
+				"line_index": map[string]any{
+					"type":        "integer",
+					"description": "Zero-based index of the main OCR line for this item, or -1 if unknown.",
 				},
-				"required":             []string{"raw_line", "product_name_spanish", "product_name_english", "quantity", "line_total", "category_key"},
-				"additionalProperties": false,
+				"raw_line": map[string]any{
+					"type":        "string",
+					"description": "Raw OCR text line(s) used to derive this item.",
+				},
+				"product_name_spanish": map[string]any{
+					"type":        "string",
+					"description": "Cleaned product name in Spanish.",
+				},
+				"product_name_english": map[string]any{
+					"type":        "string",
+					"description": "Short English translation of the product name.",
+				},
+				"quantity": map[string]any{
+					"type":        "number",
+					"description": "Quantity of the item (1.0 if not explicitly given).",
+				},
+				"unit_price": map[string]any{
+					"type":        "number",
+					"description": "Unit price in COP, or 0 if unknown.",
+				},
+				"line_total": map[string]any{
+					"type":        "number",
+					"description": "Total amount for this item in COP.",
+				},
+				"category_key": map[string]any{
+					"type":        "string",
+					"description": "One of the allowed category keys or 'other'.",
+				},
 			},
-		},
-		"categories": map[string]any{
-			"type":        "object",
-			"description": "Map of category key to description. The model should reuse the keys given in the instructions.",
-			"additionalProperties": map[string]any{
-				"type": "string",
+			// IMPORTANT: required must list *every* property key here.
+			"required": []string{
+				"line_index",
+				"raw_line",
+				"product_name_spanish",
+				"product_name_english",
+				"quantity",
+				"unit_price",
+				"line_total",
+				"category_key",
 			},
+			"additionalProperties": false,
 		},
 		"totals": map[string]any{
 			"type":        "object",
@@ -253,13 +252,13 @@ Perform a best-effort reconstruction of items and totals from the noisy OCR text
 					"type":        "number",
 					"description": "Sum of all item line_total values (in COP).",
 				},
+				"total_check_message": map[string]any{
+					"type":        "string",
+					"description": "Empty string if sums match within 1 COP; otherwise a short English explanation.",
+				},
 			},
-			"required":             []string{"receipt_total", "computed_items_total"},
+			"required":             []string{"receipt_total", "computed_items_total", "total_check_message"},
 			"additionalProperties": false,
-		},
-		"total_check_message": map[string]any{
-			"type":        "string",
-			"description": "Empty string if sums match within 1 COP; otherwise a short English explanation.",
 		},
 	}
 
