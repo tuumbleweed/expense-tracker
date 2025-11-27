@@ -4,6 +4,10 @@ package main
 
 import (
 	"flag"
+	"fmt"
+	"path/filepath"
+	"strings"
+	"time"
 
 	tl "github.com/tuumbleweed/tintlog/logger"
 	"github.com/tuumbleweed/tintlog/palette"
@@ -37,14 +41,28 @@ func main() {
 	util.EnsureFlags()
 	config.InitializeConfig(*configPath)
 
+	// Build year-month suffix like "september-2006".
+	currentTime := time.Now()
+	monthName := strings.ToLower(currentTime.Month().String())
+	yearValue := currentTime.Year()
+	yearMonthDirName := fmt.Sprintf("%s-%04d", monthName, yearValue)
+
+	// Final output directory: base out dir + "month-year".
+	finalOutputDirPath := filepath.Join(*outputDirPath, yearMonthDirName)
+
 	// Log basic startup information.
 	tl.Log(
 		tl.Notice, palette.BlueBold, "%s example entrypoint. Config path: '%s'",
 		"Running", *configPath,
 	)
 
+	tl.Log(
+		tl.Info1, palette.Cyan, "%s '%s'",
+		"Using output directory", finalOutputDirPath,
+	)
+
 	// Run the main processing flow.
-	runDirPath, e := ocr.ProcessImage(*imagePath, *outputDirPath)
+	runDirPath, e := ocr.ProcessImage(*imagePath, finalOutputDirPath)
 	e.QuitIf(xerr.ErrorTypeError)
 
 	tl.Log(tl.Notice1, palette.GreenBold, "%s. Results stored in '%s'", "OCR run completed", runDirPath)
