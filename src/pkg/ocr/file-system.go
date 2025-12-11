@@ -1,6 +1,7 @@
 package ocr
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -86,6 +87,35 @@ func saveOcrTextToFile(destinationPath string, ocrText string) (e *xerr.Error) {
 
 	tl.Log(
 		tl.Info1, palette.Green, "Saved OCR text to '%s'",
+		destinationPath,
+	)
+
+	return e
+}
+
+/*
+saveJSONToFile marshals the given value to pretty-printed JSON and writes it
+to a .json file at the given path.
+
+It accepts slices, structs, maps, or any JSON-marshalable value. It overwrites
+any existing file at that location. If marshalling or writing fails, it
+returns a *xerr.Error.
+*/
+func saveJSONToFile(destinationPath string, value any) (e *xerr.Error) {
+	jsonBytes, marshalErr := json.MarshalIndent(value, "", "  ")
+	if marshalErr != nil {
+		e = xerr.NewError(marshalErr, "marshal value to JSON", destinationPath)
+		return e
+	}
+
+	writeErr := os.WriteFile(destinationPath, jsonBytes, 0o644)
+	if writeErr != nil {
+		e = xerr.NewError(writeErr, "write JSON file", destinationPath)
+		return e
+	}
+
+	tl.Log(
+		tl.Info1, palette.Green, "Saved JSON data to '%s'",
 		destinationPath,
 	)
 

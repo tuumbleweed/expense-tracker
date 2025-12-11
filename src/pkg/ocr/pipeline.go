@@ -72,6 +72,7 @@ func ProcessImage(imagePath string, outputDirPath string) (runDirPath string, e 
 	processedOutPath := filepath.Join(runDirPath, "clean.png")
 	ocrOutPath := filepath.Join(runDirPath, "ocr.txt")
 	ocrNumbersOutPath := filepath.Join(runDirPath, "numbers-ocr.txt")
+	pricesPath := filepath.Join(runDirPath, "prices.json")
 
 	// Copy original image to the run directory.
 	e = copyOriginalImage(imagePath, originalOutPath)
@@ -107,6 +108,12 @@ func ProcessImage(imagePath string, outputDirPath string) (runDirPath string, e 
 
 	// Save OCR result into a text file.
 	e = saveOcrTextToFile(ocrOutPath, ocrText)
+	if e != nil {
+		return runDirPath, e
+	}
+
+	// Save OCR result into a text file.
+	e = saveJSONToFile(pricesPath, prices)
 	if e != nil {
 		return runDirPath, e
 	}
