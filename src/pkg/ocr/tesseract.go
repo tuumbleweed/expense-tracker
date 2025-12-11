@@ -61,3 +61,46 @@ func runOcrOnImage(imagePath string) (ocrText string, e *xerr.Error) {
 	return ocrText, e
 }
 
+func runOcrForNumbers(imagePath string) (string, *xerr.Error) {
+	tl.Log(tl.Info1, palette.Cyan, "Running numeric OCR on '%s'", imagePath)
+
+	client := gosseract.NewClient()
+	defer func() { _ = client.Close() }()
+
+	err := client.SetLanguage("spa")
+	if err != nil {
+		return "", xerr.NewError(err, "SetLanguage spa (numeric pass)", imagePath)
+	}
+
+	// Bias classifier toward numbers
+	err = client.SetVariable("tessedit_char_whitelist", "0123456789.,A")
+	if err != nil {
+		return "", xerr.NewError(err, "Failed to whitelist characters", imagePath)
+	}
+	err = client.SetVariable("classify_bln_numeric_mode", "1")
+	if err != nil {
+		return "", xerr.NewError(err, "Failed to set classify_bln_numeric_mode variable to 1", imagePath)
+	}
+
+	// 🔹 Preserve multiple spaces between words/columns
+	err = client.SetVariable("preserve_interword_spaces", "1")
+	if err != nil {
+		return "", xerr.NewError(err, "unable to client.SetVariable(\"preserve_interword_spaces\", \"1\")", imagePath)
+	}
+
+	// Same PSM is fine
+	if err := client.SetPageSegMode(gosseract.PSM_SINGLE_BLOCK); err != nil {
+		return "", xerr.NewError(err, "SetPageSegMode numeric pass", imagePath)
+	}
+
+	if err := client.SetImage(imagePath); err != nil {
+		return "", xerr.NewError(err, "SetImage numeric pass", imagePath)
+	}
+
+	text, ocrErr := client.Text()
+	if ocrErr != nil {
+		return "", xerr.NewError(ocrErr, "numeric OCR failed", imagePath)
+	}
+
+	return text, nil
+}
