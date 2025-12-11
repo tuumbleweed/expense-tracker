@@ -30,6 +30,12 @@ func runOcrOnImage(imagePath string) (ocrText string, e *xerr.Error) {
 		return "", xerr.NewError(err, "unable to client.SetLanguage(\"spa\")", imagePath)
 	}
 
+	// 🔹 Preserve multiple spaces between words/columns
+	err = client.SetVariable("preserve_interword_spaces", "1")
+	if err != nil {
+		return "", xerr.NewError(err, "unable to client.SetVariable(\"preserve_interword_spaces\", \"1\")", imagePath)
+	}
+
 	// Match CLI: `--psm 6` (single uniform block of text).
 	err = client.SetPageSegMode(gosseract.PSM_SINGLE_BLOCK)
 	if err != nil {
