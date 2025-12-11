@@ -151,6 +151,7 @@ func GenerateReceiptAnalysis(userMessage string, categories map[string]string) (
 
 	instructions := fmt.Sprintf(`
 You are an assistant that parses noisy OCR text from purchase receipts (often in Spanish).
+After a divider "----------" a list of all regex-parsed prices will be provided to help dealing with the noise.
 
 Your task:
 - Read the OCR text from the user.

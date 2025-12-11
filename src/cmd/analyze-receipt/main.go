@@ -32,14 +32,17 @@ func main() {
 	// Common flags.
 	configPath := flag.String("config", "./cfg/config.json", "Path to your configuration file.")
 	// Program-specific flags.
-	ocrTextPath := flag.String("ocr-text", "", "Path to the OCR text file to analyze.")
+	ocrDirPath := flag.String("ocr-dir", "", "Path to the OCR text file to analyze.")
 	// Parse flags.
 	flag.Parse()
 	// Mark required flags and ensure they are present.
-	util.RequiredFlag(ocrTextPath, "ocr-text")
+	util.RequiredFlag(ocrDirPath, "ocr-dir")
 	util.EnsureFlags()
 	// Initialize configuration.
 	config.InitializeConfig(*configPath)
+
+	pricesPath := filepath.Join(*ocrDirPath, "prices.json")
+	ocrTextPath := filepath.Join(*ocrDirPath, "ocr.txt")
 
 	tl.Log(
 		tl.Notice, palette.BlueBold, "%s entrypoint. Config path: '%s'",
@@ -47,17 +50,21 @@ func main() {
 	)
 
 	// Read OCR text from the provided file path.
-	ocrBytes, readErr := os.ReadFile(*ocrTextPath)
+	ocrTextBytes, readErr := os.ReadFile(ocrTextPath)
 	xerr.QuitIfError(readErr, "read OCR text file")
-	ocrText := string(ocrBytes)
+	ocrText := string(ocrTextBytes)
+	ocrPricesBytes, readErr := os.ReadFile(pricesPath)
+	xerr.QuitIfError(readErr, "read OCR prices file")
+	ocrPrices := string(ocrPricesBytes)
 
 	tl.Log(
 		tl.Info1, palette.Cyan, "Loaded OCR text from '%s' (length: '%s')",
-		*ocrTextPath, fmt.Sprintf("%d", len(ocrText)),
+		*ocrDirPath, fmt.Sprintf("%d", len(ocrText)),
 	)
 
+	userMessage := ocrText + "\n\n----------\n\n" + ocrPrices
 	// For now, pass nil to use the default category map inside the LLM layer.
-	receiptAnalysis, analysisErr := llm.GenerateReceiptAnalysis(ocrText, nil)
+	receiptAnalysis, analysisErr := llm.GenerateReceiptAnalysis(userMessage, nil)
 	if analysisErr != nil {
 		analysisErr.QuitIf(xerr.ErrorTypeError)
 	}
@@ -73,7 +80,7 @@ func main() {
 	}
 
 	// Totals are OK; proceed to save the analysis JSON next to the OCR text file.
-	runDirPath := filepath.Dir(*ocrTextPath)
+	runDirPath := filepath.Dir(ocrTextPath)
 	analysisPath := filepath.Join(runDirPath, "receipt-analysis.json")
 
 	jsonBytes, marshalErr := json.MarshalIndent(receiptAnalysis, "", "  ")
