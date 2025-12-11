@@ -82,15 +82,15 @@ func main() {
 	writeErr := os.WriteFile(analysisPath, jsonBytes, 0o644)
 	xerr.QuitIfError(writeErr, "write receipt-analysis.json file")
 
+	// Log the structured analysis as JSON for inspection.
+	tl.LogJSON(tl.Verbose, palette.CyanDim, "ReceiptAnalysis", receiptAnalysis)
+
 	tl.Log(
-		tl.Notice1, palette.GreenBold, "%s",
+		tl.Notice, palette.GreenBold, "%s",
 		"Receipt analysis generated and saved successfully",
 	)
 	tl.Log(
-		tl.Info1, palette.Green, "Saved receipt analysis to '%s'",
-		analysisPath,
+		tl.Info, palette.Green, "%s to '%s'",
+		"Saved receipt analysis", analysisPath,
 	)
-
-	// Log the structured analysis as JSON for inspection.
-	tl.LogJSON(tl.Info, palette.Cyan, "ReceiptAnalysis", receiptAnalysis)
 }
