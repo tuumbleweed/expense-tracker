@@ -30,6 +30,11 @@ func runOcrOnImage(imagePath string) (ocrText string, e *xerr.Error) {
 		return "", xerr.NewError(err, "unable to client.SetLanguage(\"spa\")", imagePath)
 	}
 
+	err = client.SetVariable("tessedit_char_blacklist", "+")
+	if err != nil {
+		return "", xerr.NewError(err, "unable to SetVariable(tessedit_char_blacklist,\"+\")", imagePath)
+	}
+
 	// 🔹 Preserve multiple spaces between words/columns
 	err = client.SetVariable("preserve_interword_spaces", "1")
 	if err != nil {

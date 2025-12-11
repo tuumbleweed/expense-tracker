@@ -96,6 +96,9 @@ func ProcessImage(imagePath string, outputDirPath string) (runDirPath string, e 
 		return runDirPath, e
 	}
 
+	prices := ExtractPriceCandidates(numbersOcr)
+	tl.Log(tl.Info, palette.Cyan, "Extracted prices: '%s'", prices)
+
 	// Save OCR result into a text file.
 	e = saveOcrTextToFile(ocrNumbersOutPath, numbersOcr)
 	if e != nil {
