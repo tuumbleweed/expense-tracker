@@ -123,7 +123,7 @@ Behavior:
   - LLMRunMetadata from the OpenAI wrapper.
 */
 func GenerateReceiptAnalysis(userMessage string, categories map[string]string) (receiptAnalysis ReceiptAnalysis, e *xerr.Error) {
-	model := "gpt-5-nano"
+	model := "gpt-5-mini"
 	reasoningEffort := openai.EffortLow
 	tools := []any{} // disable the tools for now
 	toolChoice := "auto"
