@@ -89,7 +89,7 @@ func buildDefaultReceiptCategories() map[string]string {
 		"personal_care":      "Toiletries, cosmetics, hygiene and personal care products.",
 		"prepared_food":      "Prepared meals, take-out food or ready-to-eat items.",
 		"medicine":           "Pharmacy products, medicines and health-related items.",
-		"body_building":      "Protein, creatine etc.",
+		"supplements":        "Protein, creatine, vitamins etc.",
 		"other":              "Anything that does not clearly fit any of the categories above.",
 	}
 }
