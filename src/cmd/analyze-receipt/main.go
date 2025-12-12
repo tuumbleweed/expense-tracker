@@ -43,6 +43,7 @@ func main() {
 
 	pricesPath := filepath.Join(*ocrDirPath, "prices.json")
 	ocrTextPath := filepath.Join(*ocrDirPath, "ocr.txt")
+	imagePath := filepath.Join(*ocrDirPath, "orig.jpg")
 
 	tl.Log(
 		tl.Notice, palette.BlueBold, "%s entrypoint. Config path: '%s'",
@@ -53,18 +54,16 @@ func main() {
 	ocrTextBytes, readErr := os.ReadFile(ocrTextPath)
 	xerr.QuitIfError(readErr, "read OCR text file")
 	ocrText := string(ocrTextBytes)
-	ocrPricesBytes, readErr := os.ReadFile(pricesPath)
-	xerr.QuitIfError(readErr, "read OCR prices file")
-	ocrPrices := string(ocrPricesBytes)
+	ocrPrices, e := llm.ReadOcrPricesFromFile(pricesPath)
+	e.QuitIf("error")
 
 	tl.Log(
 		tl.Info1, palette.Cyan, "Loaded OCR text from '%s' (length: '%s')",
 		*ocrDirPath, fmt.Sprintf("%d", len(ocrText)),
 	)
 
-	userMessage := ocrText + "\n\n----------\n\n" + ocrPrices
 	// For now, pass nil to use the default category map inside the LLM layer.
-	receiptAnalysis, analysisErr := llm.GenerateReceiptAnalysis(userMessage, nil)
+	receiptAnalysis, analysisErr := llm.GenerateReceiptAnalysisFromImage(imagePath, ocrText, ocrPrices, nil)
 	if analysisErr != nil {
 		analysisErr.QuitIf(xerr.ErrorTypeError)
 	}
