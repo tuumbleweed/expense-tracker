@@ -47,7 +47,7 @@ ReceiptAnalysis using the OpenAI Responses API with vision.
 
 Parameters:
   - imagePath: path to the original receipt image (photo).
-  - ocrText: noisy OCR text extracted locally (often in Spanish).
+  - ocrText: noisy OCR text extracted locally.
   - priceCandidates: list of numeric price strings parsed via regex from
     numeric-only OCR (used as hints).
   - categories: optional category map (key -> description). If nil/empty, the
@@ -120,7 +120,7 @@ func GenerateReceiptAnalysisFromImage(
 	userMessage := userTextBuilder.String()
 
 	instructions := fmt.Sprintf(`
-You are an assistant that parses noisy purchase receipts (often in Spanish)
+You are an assistant that parses noisy purchase receipts
 using BOTH:
 - a photo image of the receipt (attached as an input_image), and
 - noisy OCR text plus a list of numeric price candidates (provided in the user message).
@@ -130,7 +130,7 @@ Your task:
 - Use the OCR text and the "PRICE CANDIDATES" list only as hints for resolving ambiguous glyphs.
 - Identify each purchased product line in the receipt.
 - For each item, extract:
-  - original_product_name: cleaned product name as it appears on the receipt (Spanish), without the price.
+  - original_product_name: cleaned product name as it appears on the receipt without the price.
   - product_name_english: short English translation of the product name.
   - quantity: numeric quantity (use 1.0 if not explicitly given but implied).
   - unit_price: unit price in COP if you can infer it, otherwise 0.

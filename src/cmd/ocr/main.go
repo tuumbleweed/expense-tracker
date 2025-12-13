@@ -34,6 +34,7 @@ func main() {
 	// Program-specific flags.
 	imagePath := flag.String("image", "", "Path to the receipt image to process.")
 	outputDirPath := flag.String("out", "./out", "Directory where processed images and OCR text will be stored.")
+	language := flag.String("language", "eng+spa", "Language of the receipt. eng, spa, por, spa+eng etc. \"tesseract --list-langs\"")
 
 	// Parse and initialize config.
 	flag.Parse()
@@ -62,7 +63,7 @@ func main() {
 	)
 
 	// Run the main processing flow.
-	runDirPath, e := ocr.ProcessImage(*imagePath, finalOutputDirPath)
+	runDirPath, e := ocr.ProcessImage(*imagePath, finalOutputDirPath, *language)
 	e.QuitIf(xerr.ErrorTypeError)
 
 	tl.Log(tl.Notice1, palette.GreenBold, "%s. Results stored in '%s'", "OCR run completed", runDirPath)

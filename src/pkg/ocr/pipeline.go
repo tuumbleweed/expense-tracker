@@ -20,12 +20,12 @@ It performs the following steps:
   3. Creates a per-run directory under the root, named by timestamp.
   4. Copies the original image into that run directory as orig.<ext>.
   5. Creates a processed version of the image in that run directory as clean.png.
-  6. Runs OCR (in Spanish) on clean.png using gosseract.
+  6. Runs OCR on clean.png using gosseract.
   7. Saves the OCR text into ocr.txt in the same run directory.
 
 If any step fails, it returns a *xerr.Error describing the problem.
 */
-func ProcessImage(imagePath string, outputDirPath string) (runDirPath string, e *xerr.Error) {
+func ProcessImage(imagePath, outputDirPath, language string) (runDirPath string, e *xerr.Error) {
 	e = validateImagePath(imagePath)
     if e != nil {
         return
@@ -92,7 +92,7 @@ func ProcessImage(imagePath string, outputDirPath string) (runDirPath string, e 
 	if e != nil {
 		return runDirPath, e
 	}
-	ocrText, e = runOcrOnImage(processedOutPath)
+	ocrText, e = runOcrOnImage(processedOutPath, language)
 	if e != nil {
 		return runDirPath, e
 	}

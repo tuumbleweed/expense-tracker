@@ -17,7 +17,7 @@ extract text. It returns the raw OCR text or a *xerr.Error if something
 goes wrong (for example, Tesseract missing, language data missing, or a
 read failure).
 */
-func runOcrOnImage(imagePath string) (ocrText string, e *xerr.Error) {
+func runOcrOnImage(imagePath, language string) (ocrText string, e *xerr.Error) {
 	tl.Log(tl.Info1, palette.Cyan, "Running OCR on processed image '%s'", imagePath)
 
 	client := gosseract.NewClient()
@@ -25,7 +25,7 @@ func runOcrOnImage(imagePath string) (ocrText string, e *xerr.Error) {
 		_ = client.Close()
 	}()
 
-	err := client.SetLanguage("spa")
+	err := client.SetLanguage(language)
 	if err != nil {
 		return "", xerr.NewError(err, "unable to client.SetLanguage(\"spa\")", imagePath)
 	}
@@ -72,13 +72,8 @@ func runOcrForNumbers(imagePath string) (string, *xerr.Error) {
 	client := gosseract.NewClient()
 	defer func() { _ = client.Close() }()
 
-	err := client.SetLanguage("spa")
-	if err != nil {
-		return "", xerr.NewError(err, "SetLanguage spa (numeric pass)", imagePath)
-	}
-
 	// Bias classifier toward numbers
-	err = client.SetVariable("tessedit_char_whitelist", "0123456789.,A")
+	err := client.SetVariable("tessedit_char_whitelist", "0123456789.,A")
 	if err != nil {
 		return "", xerr.NewError(err, "Failed to whitelist characters", imagePath)
 	}

@@ -99,7 +99,7 @@ GenerateReceiptAnalysis takes OCR'd receipt text and an optional category map
 and produces a structured ReceiptAnalysis using the OpenAI Responses API.
 
 Parameters:
-  - userMessage: raw OCR text from the receipt (possibly noisy, often in Spanish).
+  - userMessage: raw OCR text from the receipt (possibly noisy).
   - categories: optional category map (key -> description). If this map is
     nil or empty, a default set of categories is used.
 
@@ -150,7 +150,7 @@ func GenerateReceiptAnalysis(userMessage string, categories map[string]string) (
 	categoryBlock := strings.Join(categoryLines, "\n")
 
 	instructions := fmt.Sprintf(`
-You are an assistant that parses noisy OCR text from purchase receipts (often in Spanish).
+You are an assistant that parses noisy OCR text from purchase receipts.
 After a divider "----------" a list of all regex-parsed prices will be provided to help dealing with the noise.
 
 Your task:
