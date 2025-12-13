@@ -56,7 +56,6 @@ func main() {
 		tl.Notice, palette.BlueBold, "%s example entrypoint. Config path: '%s'",
 		"Running", *configPath,
 	)
-
 	tl.Log(
 		tl.Info1, palette.Cyan, "%s '%s'",
 		"Using output directory", finalOutputDirPath,
