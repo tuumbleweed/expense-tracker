@@ -34,7 +34,7 @@ func main() {
 	// Program-specific flags.
 	imagePath := flag.String("image", "", "Path to the receipt image to process.")
 	outputDirPath := flag.String("out", "./out", "Directory where processed images and OCR text will be stored.")
-	language := flag.String("language", "eng+spa", "Language of the receipt. eng, spa, por, spa+eng etc. \"tesseract --list-langs\"")
+	language := flag.String("language", "eng+spa", "Language of the receipt. eng, spa, por, spa+eng etc. \"tesseract --list-langs\", \"apt install tesseract-ocr-fra\"")
 
 	// Parse and initialize config.
 	flag.Parse()
