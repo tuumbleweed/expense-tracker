@@ -62,14 +62,14 @@ type llmRunMetadata struct {
 receiptItem represents a single line item from the receipt.
 */
 type receiptItem struct {
-	LineIndex           int    `json:"line_index"`
-	RawLine             string `json:"raw_line"`
-	OriginalProductName string `json:"original_product_name"`
-	ProductNameEnglish  string `json:"product_name_english"`
-	Quantity            int64  `json:"quantity"`
-	UnitPrice           int64  `json:"unit_price"`
-	LineTotal           int64  `json:"line_total"`
-	CategoryKey         string `json:"category_key"`
+	LineIndex           int     `json:"line_index"`
+	RawLine             string  `json:"raw_line"`
+	OriginalProductName string  `json:"original_product_name"`
+	ProductNameEnglish  string  `json:"product_name_english"`
+	Quantity            float32 `json:"quantity"`
+	UnitPrice           int64   `json:"unit_price"`
+	LineTotal           int64   `json:"line_total"`
+	CategoryKey         string  `json:"category_key"`
 }
 
 /*
@@ -98,11 +98,11 @@ type reportOptions struct {
 categoryAgg accumulates spend for a category across many receipts.
 */
 type categoryAgg struct {
-	Key            string `json:"key"`
-	DisplayName    string `json:"display_name"`
-	Amount         int64  `json:"amount"`
-	ItemLineCount  int64  `json:"item_line_count"`
-	ReceiptHitCount int64 `json:"receipt_hit_count"`
+	Key             string `json:"key"`
+	DisplayName     string `json:"display_name"`
+	Amount          int64  `json:"amount"`
+	ItemLineCount   int64  `json:"item_line_count"`
+	ReceiptHitCount int64  `json:"receipt_hit_count"`
 }
 
 /*
@@ -139,7 +139,8 @@ type monthlyReport struct {
 main is the CLI entry point.
 
 Example:
-  go run . -out ./out -year 2025 -month 12 -o ./report-2025-12.html
+
+	go run . -out ./out -year 2025 -month 12 -o ./report-2025-12.html
 */
 func main() {
 	options := parseFlags()
@@ -206,7 +207,7 @@ func parseFlags() reportOptions {
 
 	outputPath := *outputFlag
 	if outputPath == "" {
-		outputPath = fmt.Sprintf("./report-%04d-%02d.html", yearValue, monthValue)
+		outputPath = fmt.Sprintf("./tmp/report-%04d-%02d.html", yearValue, monthValue)
 	}
 
 	reportTitle := *titleFlag
@@ -302,10 +303,10 @@ func buildMonthlyReport(options reportOptions) (report monthlyReport, e *xerr.Er
 			agg, exists := categoryAggByKey[categoryKey]
 			if !exists {
 				agg = &categoryAgg{
-					Key:            categoryKey,
-					DisplayName:    displayCategoryName(categoryKey),
-					Amount:         0,
-					ItemLineCount:  0,
+					Key:             categoryKey,
+					DisplayName:     displayCategoryName(categoryKey),
+					Amount:          0,
+					ItemLineCount:   0,
 					ReceiptHitCount: 0,
 				}
 				categoryAggByKey[categoryKey] = agg
@@ -600,13 +601,13 @@ displayCategoryName maps known keys to nicer names and falls back to a title-cas
 */
 func displayCategoryName(categoryKey string) string {
 	known := map[string]string{
-		"personal_care":       "Personal care",
-		"household_cleaning":  "Household cleaning",
-		"drinks_soft":         "Drinks (non-alcoholic)",
-		"bakery":              "Bakery",
-		"other_food":          "Other food",
-		"other":               "Other",
-		"uncategorized":       "Uncategorized",
+		"personal_care":      "Personal care",
+		"household_cleaning": "Household cleaning",
+		"drinks_soft":        "Drinks (non-alcoholic)",
+		"bakery":             "Bakery",
+		"other_food":         "Other food",
+		"other":              "Other",
+		"uncategorized":      "Uncategorized",
 	}
 
 	name, exists := known[categoryKey]
@@ -773,7 +774,8 @@ func cardClose() string {
 formatCOP formats an integer amount as COP with dot thousand separators.
 
 Example:
-  71630 -> "COP 71.630"
+
+	71630 -> "COP 71.630"
 */
 func formatCOP(amount int64) string {
 	sign := ""
