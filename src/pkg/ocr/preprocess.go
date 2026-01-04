@@ -30,7 +30,7 @@ func createProcessedImage(sourcePath string, destinationPath string) (e *xerr.Er
 	)
 
 	// Open the source image using the imaging library.
-	originalImage, openErr := imaging.Open(sourcePath)
+	originalImage, openErr := imaging.Open(sourcePath, imaging.AutoOrientation(true))
 	if openErr != nil {
 		e = xerr.NewError(openErr, "open source image for processing", sourcePath)
 		return
