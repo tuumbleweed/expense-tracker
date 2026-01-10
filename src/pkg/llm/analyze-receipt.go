@@ -167,9 +167,9 @@ Your task:
   - Determine receipt_total: the total amount charged according to the receipt (in COP).
   - Determine computed_items_total: sum of all item line_total values.
   - Compare them:
-      * If they are equal within 1 COP, set total_check_message to "" (empty string).
+      * If they are equal within 5000 COP, set total_check_message to "" (empty string).
       * Otherwise, set total_check_message to a short English explanation such as:
-        "Sum of items is 10,470 COP but receipt total is 10,480 COP (difference: 10 COP)."
+        "Sum of items is 134,470 COP but receipt total is 150,520 COP (difference: 16,050 COP)."
 
 Allowed category keys and descriptions:
 %s
