@@ -145,7 +145,7 @@ Example:
 func main() {
 	options := parseFlags()
 
-	tl.Log(tl.Notice, palette.BlueBold, "Generating monthly expense report for %04d-%02d from '%s'", options.Year, int(options.Month), options.OutDir)
+	tl.Log(tl.Notice, palette.BlueBold, "Generating monthly expense report for %04s-%02s from '%s'", options.Year, int(options.Month), options.OutDir)
 
 	report, reportErr := buildMonthlyReport(options)
 	if reportErr != nil {
