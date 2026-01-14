@@ -14,8 +14,8 @@ require (
 	github.com/otiai10/gosseract/v2 v2.4.1
 	github.com/sendgrid/rest v2.6.9+incompatible
 	github.com/sendgrid/sendgrid-go v3.16.1+incompatible
-	github.com/tuumbleweed/tintlog v0.0.9
-	github.com/tuumbleweed/xerr v0.0.2
+	github.com/tuumbleweed/tintlog v0.0.10
+	github.com/tuumbleweed/xerr v0.0.3
 	golang.org/x/time v0.14.0
 )
 
