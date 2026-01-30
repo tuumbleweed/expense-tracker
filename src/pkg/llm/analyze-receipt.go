@@ -80,17 +80,42 @@ to the caller via ReceiptAnalysis.Categories.
 */
 func buildDefaultReceiptCategories() map[string]string {
 	return map[string]string{
-		"dairy":              "Milk, yogurt, cheese, butter and other dairy products.",
-		"bakery":             "Bread, baked goods, pastries, tortillas and similar items.",
-		"snacks_sweets":      "Snacks, cookies, candy, chocolate, desserts and similar.",
-		"drinks_soft":        "Soft drinks, bottled water, juices and non-alcoholic beverages.",
-		"other_food":         "Other food items not covered by more specific grocery categories.",
-		"household_cleaning": "Cleaning products, detergents, paper goods and similar.",
-		"personal_care":      "Toiletries, cosmetics, hygiene and personal care products.",
-		"prepared_food":      "Prepared meals, take-out food or ready-to-eat items.",
-		"medicine":           "Pharmacy products, medicines and health-related items.",
-		"supplements":        "Protein, creatine, vitamins etc.",
-		"other":              "Anything that does not clearly fit any of the categories above.",
+		// groceries
+		"milk":              "Milk (cow/goat), lactose-free milk, flavored milk, and similar.",
+		"yogurt":            "Yogurt, kefir, drinkable yogurt, Greek yogurt, and similar dairy snacks.",
+		"eggs":              "Eggs (any size/type), egg cartons, and similar.",
+		"fruits":            "Fresh fruits like apples, oranges, bananas, berries, grapes, and similar.",
+		"vegetables":        "Fresh vegetables like onions, tomatoes, potatoes, carrots, peppers, greens, and similar.",
+		"meat":              "Meat and poultry: beef, pork, chicken, turkey, sausages, ground meat, and similar.",
+		"crops":             "Staple dry goods: rice, lentils, beans, chickpeas, oats, pasta, flour, cornmeal, and similar.",
+		"bakery":            "Bread, baked goods, pastries, tortillas, crackers/breadsticks, and similar.",
+		"snacks_sweets":     "Snacks, cookies, chips, candy, chocolate, desserts, and similar.",
+		"drinks_soft":       "Soft drinks, bottled water, juices, and other non-alcoholic beverages.",
+		"olive_oil":         "Olive oil and olive-based cooking oils.",
+		"sunflower_oil":     "Sunflower oil and sunflower-based cooking oils.",
+		"coffee":            "Coffee beans, ground coffee, instant coffee, and coffee-related items like filters.",
+		"tea":               "Tea bags, loose tea, herbal/aromática tea, and similar infusions.",
+		"spices_salt_sugar": "Spices and seasonings, plus salt and sugar (and similar sweeteners).",
+		"soy_sauce":         "Soy sauce, tamari, and similar soy-based sauces (kept separate from other sauces).",
+		"sauces":            "Sauces like tomato sauce, bolognese, mayonnaise, ketchup, mustard, hot sauce, dressings, and similar (excluding soy sauce).",
+
+		// household cleaning & paper goods
+		"wet_tissue":          "Wet wipes/wet tissues for cleaning surfaces, hands, or general household use.",
+		"paper_towels":        "Paper towels, kitchen rolls, and similar disposable paper cleaning rolls.",
+		"toilet_paper":        "Toilet paper rolls, tissues intended for bathroom use, and similar.",
+		"dishwashing":         "Dishwashing liquid/gel, dishwashing solid/bar, and similar dish-cleaning products.",
+		"washing_machine":     "Laundry detergent (powder/liquid), softener, stain remover, bleach, and similar laundry products.",
+		"other_household":     "Other household items like trash bags, dish sponges, washing towels/rags, gloves, foil, cling film, and similar.",
+
+		// personal care & health
+		"shampoo":             "Shampoo, conditioner, and similar hair-washing products.",
+		"toothpaste":          "Toothpaste, toothpaste tablets, and similar oral-care paste products.",
+		"personal_care_other": "Other personal care items not listed above: deodorant, razors, shaving cream, cotton pads, skincare, cosmetics, feminine hygiene, and similar.",
+		"medicine":            "Pharmacy products, medicines, first-aid and other health-related items.",
+		"supplements":         "Supplements like protein, creatine, vitamins, minerals, omega-3, and similar.",
+
+		// fallback
+		"other": "Anything that does not clearly fit any of the categories above.",
 	}
 }
 
