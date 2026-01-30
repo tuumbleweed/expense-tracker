@@ -107,7 +107,7 @@ func main() {
 	}
 
 	tl.Log(
-		tl.Notice, palette.GreenBold, "Done. Processed: '%d', skipped: '%d'",
+		tl.Notice, palette.GreenBold, "Done. Processed: '%s', skipped: '%s'",
 		processedCount, skippedCount,
 	)
 }
