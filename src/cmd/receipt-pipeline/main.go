@@ -42,6 +42,7 @@ func main() {
 	imagePath := flag.String("image", "", "Path to a receipt image OR a directory with images (.jpg/.jpeg/.png).")
 	outputDirPath := flag.String("out", "./out", "Directory where processed images and OCR text will be stored.")
 	language := flag.String("language", "eng+spa", "Language of the receipt. eng, spa, por, spa+eng etc. \"tesseract --list-langs\", \"apt install tesseract-ocr-fra\"")
+	priceDifference := flag.Bool("price-difference", false, "If sum and overall prices are different - stop the program")
 
 	flag.Parse()
 	util.RequiredFlag(imagePath, "image")
@@ -89,7 +90,7 @@ func main() {
 	for _, imgPath := range imagesToProcess {
 		tl.Log(tl.Notice, palette.BlueBold, "%s '%s'", "Processing image", imgPath)
 
-		runDirPath, e := processOneImage(imgPath, finalOutputDirPath, *language)
+		runDirPath, e := processOneImage(imgPath, finalOutputDirPath, *language, *priceDifference)
 		if e != nil {
 			skippedCount++
 			tl.Log(
@@ -175,7 +176,7 @@ func isAllowedImageExt(ext string) bool {
 	}
 }
 
-func processOneImage(imagePath string, finalOutputDirPath string, language string) (runDirPath string, e *xerr.Error) {
+func processOneImage(imagePath, finalOutputDirPath, language string, priceDifference bool) (runDirPath string, e *xerr.Error) {
 	// 1) OCR pipeline
 	runDirPath, e = ocr.ProcessImage(imagePath, finalOutputDirPath, language)
 	if e != nil {
@@ -214,17 +215,20 @@ func processOneImage(imagePath string, finalOutputDirPath string, language strin
 		return "", analysisErr
 	}
 
-	// In batch mode, don’t kill the whole run; just skip this image.
-	if receiptAnalysis.Totals.TotalCheckMessage != "" {
-		tl.Log(
-			tl.Warning, palette.PurpleBold, "Receipt total does not match sum of items: '%s'",
-			receiptAnalysis.Totals.TotalCheckMessage,
-		)
-		tl.Log(tl.Warning1, palette.PurpleBold, "%s", "Try taking a photo again")
-		err := fmt.Errorf("totals mismatch")
-		e = xerr.NewError(err, "receipt totals mismatch", runDirPath)
-		return "", e
+	if priceDifference {
+		// In batch mode, don’t kill the whole run; just skip this image.
+		if receiptAnalysis.Totals.TotalCheckMessage != "" {
+			tl.Log(
+				tl.Warning, palette.PurpleBold, "Receipt total does not match sum of items: '%s'",
+				receiptAnalysis.Totals.TotalCheckMessage,
+			)
+			tl.Log(tl.Warning1, palette.PurpleBold, "%s", "Try taking a photo again")
+			err := fmt.Errorf("totals mismatch")
+			e = xerr.NewError(err, "receipt totals mismatch", runDirPath)
+			return "", e
+		}
 	}
+	
 
 	analysisPath := filepath.Join(runDirPath, "receipt-analysis.json")
 

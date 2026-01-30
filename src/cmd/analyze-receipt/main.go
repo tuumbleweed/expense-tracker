@@ -33,6 +33,7 @@ func main() {
 	configPath := flag.String("config", "./cfg/config.json", "Path to your configuration file.")
 	// Program-specific flags.
 	ocrDirPath := flag.String("ocr-dir", "", "Path to the OCR text file to analyze.")
+	priceDifference := flag.Bool("price-difference", false, "If sum and overall prices are different - stop the program")
 	// Parse flags.
 	flag.Parse()
 	// Mark required flags and ensure they are present.
@@ -68,14 +69,16 @@ func main() {
 		analysisErr.QuitIf(xerr.ErrorTypeError)
 	}
 
-	// If totals do not match, log a warning and stop the program.
-	if receiptAnalysis.Totals.TotalCheckMessage != "" {
-		tl.Log(
-			tl.Warning, palette.PurpleBold, "Receipt total does not match sum of items: '%s'",
-			receiptAnalysis.Totals.TotalCheckMessage,
-		)
-		tl.Log(tl.Warning1, palette.PurpleBold, "%s", "Try taking a photo again")
-		os.Exit(0)
+	if *priceDifference {
+		// If totals do not match, log a warning and stop the program.
+		if receiptAnalysis.Totals.TotalCheckMessage != "" {
+			tl.Log(
+				tl.Warning, palette.PurpleBold, "Receipt total does not match sum of items: '%s'",
+				receiptAnalysis.Totals.TotalCheckMessage,
+			)
+			tl.Log(tl.Warning1, palette.PurpleBold, "%s", "Try taking a photo again")
+			os.Exit(0)
+		}
 	}
 
 	// Totals are OK; proceed to save the analysis JSON next to the OCR text file.
