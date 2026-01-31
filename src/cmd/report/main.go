@@ -176,7 +176,7 @@ func parseFlags() reportOptions {
 	monthFlag := flag.Int("month", 0, "Month to report 1-12 (default: current month)")
 	outputFlag := flag.String("o", "", "Output HTML path (default: ./report-YYYY-MM.html)")
 	timezoneFlag := flag.String("tz", "America/Bogota", "IANA timezone (e.g., America/Bogota)")
-	maxRowsFlag := flag.Int("max-rows", 10, "Maximum category rows before grouping remainder into 'Other'")
+	maxRowsFlag := flag.Int("max-rows", 100, "Maximum category rows before grouping remainder into 'Other'")
 	titleFlag := flag.String("title", "", "Report title (default: Expense report — Month Year)")
 
 	flag.Parse()
