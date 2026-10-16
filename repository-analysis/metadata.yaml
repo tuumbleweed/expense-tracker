@@ -1,0 +1,37 @@
+schema_version: 1
+id: expense-tracker
+name: Expense Tracker
+original_name: expense-tracker
+short_description: A Go command-line receipt pipeline combining local OCR and OpenAI image analysis to categorize supermarket purchases and generate monthly HTML spending reports.
+repository:
+  local_name: expense-tracker
+  url: https://github.com/tuumbleweed/expense-tracker
+  relationship: standalone
+  parent_project: null
+project:
+  type: unknown
+  status: inactive
+  categories: [tooling, data_engineering]
+  start_date: null
+  end_date: null
+  date_precision: unknown
+  git_first_activity: "2025-11-26"
+  git_last_activity: "2026-01-30"
+technologies:
+  languages: [Go, HTML, CSS]
+  frameworks: []
+  databases: []
+  messaging: []
+  infrastructure: [OpenAI Responses API]
+  tools: [Tesseract OCR, gosseract, disintegration/imaging, Go modules, Git]
+links:
+  repository: https://github.com/tuumbleweed/expense-tracker
+  demo: null
+publication:
+  visibility: review_required
+  featured: false
+  show_criticism: false
+  review_status: unverified
+analysis:
+  analyzed_commit: f20015c78224ca9e378590fd24b04c48997bc42f
+  analyzed_at: "2026-10-15"
